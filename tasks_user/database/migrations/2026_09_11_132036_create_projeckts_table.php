@@ -7,9 +7,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('projeckts', function (Blueprint $table) {
@@ -17,7 +14,10 @@ return new class extends Migration
             $table->string('name');
             $table->integer('costs')->nullable();
             $table->integer('time')->nullable();
-            $table->unsignedBigInteger('manager_id') -> constraint('users');
+            
+            // Explicitly reference the 'users' table
+            $table->foreignId('manager_id')->constrained('users')->onDelete('cascade');
+            
             $table->timestamps();
         });
 
@@ -25,13 +25,10 @@ return new class extends Migration
             'name' => 'Admin',
             'costs' => 50000,
             'time' => 20,
-            'manager_id' => 2,
+            'manager_id' => 1, // Ensure user ID 1 exists (from users migration)
         ]);
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('projeckts');
